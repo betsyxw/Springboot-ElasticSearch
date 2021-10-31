@@ -4,6 +4,8 @@ import com.xuwen.esblog.entity.mysql.MysqlBlog;
 import com.xuwen.esblog.repository.es.EsBlogRepository;
 import com.xuwen.esblog.repository.mysql.MysqlBlogRepository;
 import lombok.Data;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,14 @@ public class DataController {
 
         }else if(type.equalsIgnoreCase("es")){
             //传入的是es
+            //把案例传入这里，看这些
+            BoolQueryBuilder builder = QueryBuilders.boolQuery();
+            builder.should(QueryBuilders.matchPhraseQuery("title",param.getKeyword()));
+            builder.should(QueryBuilders.matchPhraseQuery("content",param.getKeyword()));
+            String s = builder.toString();
+            System.out.println(s);
+            //esBlogRepository.search(builder);
+
 
         }else{
             return "i dont understand!";
